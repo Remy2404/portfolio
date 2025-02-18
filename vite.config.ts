@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['next-themes' , 'fraamer-motion', 'lucide-react']
+    include: ['next-themes', 'framer-motion', 'lucide-react']
   },
   build: {
     commonjsOptions: {
