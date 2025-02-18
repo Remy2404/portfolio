@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { ChevronDown } from 'lucide-react';
+import Ramy from '../../Img/Ramy.png';
 
 
 const Hero = () => {
@@ -125,8 +126,7 @@ const Hero = () => {
             <div className="absolute -inset-[3px] bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-xl opacity-75 group-hover:opacity-100 blur-[2px] animate-pulse transition-all duration-300" />
             <div className="relative bg-[#0A0A0A] p-4 rounded-lg">
               <motion.img
-                src="./Img/Ramy.png"
-                alt="Phon Ramy"
+                src={Ramy}                alt="Phon Ramy"
                 className="w-full aspect-square object-cover rounded-lg"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
