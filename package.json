@@ -4,10 +4,11 @@
   "version": "1.0.1",
   "type": "module",
   "scripts": {
+    "clean": "rm -rf dist",
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run clean && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "start": "vite preview"
   },
   "dependencies": {
     "@react-spring/three": "^9.7.3",
