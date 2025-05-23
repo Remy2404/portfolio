@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Code2, Rocket, Brain, Coffee } from 'lucide-react';
+import { CyberTerminal } from './CyberpunkElements';
 
 const About = () => {
   const [ref, inView] = useInView({
@@ -17,7 +18,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-[#0A0A0A] relative overflow-hidden">
+    <section id="about" className="py-20 bg-cyberpunk-purple relative overflow-hidden cyberpunk-crt">
       <div className="max-w-6xl mx-auto px-4">
         <motion.div
           ref={ref}
@@ -27,9 +28,9 @@ const About = () => {
         >
           {/* Title */}
           <div className="relative inline-block">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-lg opacity-75 blur-sm animate-pulse" />
-            <h2 className="relative text-3xl font-bold text-white bg-[#0A0A0A] px-4 py-2 rounded-lg">
-              About Me
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-pink via-cyberpunk-green to-cyberpunk-blue rounded-lg opacity-75 blur-sm animate-pulse" />
+            <h2 className="relative text-3xl font-bold text-white bg-cyberpunk-purple px-6 py-3 rounded-lg font-mono">
+              <span className="text-cyberpunk-blue">SYSTEM</span>.<span className="text-cyberpunk-green">get</span>(<span className="text-cyberpunk-pink">"about.exe"</span>)
             </h2>
           </div>
 
@@ -40,20 +41,44 @@ const About = () => {
               initial={{ opacity: 0, x: -50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5 }}
-              className="relative group"
+              className="relative"
             >
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-lg opacity-20 group-hover:opacity-50 transition-opacity duration-300 blur-sm" />
-              <div className="relative bg-[#0A0A0A]/80 backdrop-blur-sm p-6 rounded-lg">
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  I'm a passionate Full-Stack Developer based in Phnom Penh, Cambodia, with a burning desire to create innovative digital solutions. My journey in tech is driven by curiosity and a commitment to excellence.
-                </p>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Currently pursuing my Bachelor's in IT Engineering at Royal University of Phnom Penh, I blend academic insights with hands-on experience in cutting-edge technologies.
-                </p>
-                <p className="text-gray-300 leading-relaxed">
-                  My approach combines creative problem-solving with technical expertise, allowing me to build scalable, user-centric applications that make a real impact.
-                </p>
-              </div>
+              <CyberTerminal title="bio_data.log" className="h-full">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-cyberpunk-green">$</span>
+                    <div>
+                      <span className="animate-pulse mr-1">_</span>
+                      <span className="text-cyberpunk-yellow">identity</span>.<span className="text-cyberpunk-pink">print</span>()<span className="animate-pulse">;</span>
+                    </div>
+                  </div>
+                  
+                  <div className="border border-cyberpunk-green/30 rounded p-3 bg-black/30">
+                    <p className="text-gray-300 leading-relaxed mb-3">
+                      I'm a passionate <span className="text-cyberpunk-pink font-bold">Full-Stack Developer</span> based in Phnom Penh, Cambodia, with a burning desire to create innovative digital solutions. My journey in tech is driven by curiosity and a commitment to excellence.
+                    </p>
+                    <p className="text-gray-300 leading-relaxed mb-3">
+                      Currently pursuing my <span className="text-cyberpunk-blue font-bold">Bachelor's in IT Engineering</span> at Royal University of Phnom Penh, I blend academic insights with hands-on experience in cutting-edge technologies.
+                    </p>
+                    <p className="text-gray-300 leading-relaxed">
+                      My approach combines <span className="text-cyberpunk-green font-bold">creative problem-solving</span> with <span className="text-cyberpunk-yellow font-bold">technical expertise</span>, allowing me to build scalable, user-centric applications that make a real impact.
+                    </p>
+                  </div>
+                  
+                  <div className="flex space-x-2 text-sm">
+                    <div>
+                      <span className="text-cyberpunk-green">$</span>
+                      <span className="text-cyberpunk-blue ml-1">status: </span>
+                      <span className="bg-cyberpunk-green/20 text-cyberpunk-green px-1 rounded">ONLINE</span>
+                    </div>
+                    
+                    <div className="ml-6">
+                      <span className="text-cyberpunk-blue">version: </span>
+                      <span className="bg-cyberpunk-pink/20 text-cyberpunk-pink px-1 rounded">v4.2.0</span>
+                    </div>
+                  </div>
+                </div>
+              </CyberTerminal>
             </motion.div>
 
             {/* Right Column - Stats & Quick Facts */}

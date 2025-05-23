@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, Terminal, MessageSquare, Users, ThumbsUp } from 'lucide-react';
+import { CyberCard, CyberBadge, CyberTerminal } from './CyberpunkElements';
 
 interface Recommendation {
   id: number;
@@ -112,64 +113,63 @@ const RecommendationCard = ({ recommendation, index }: { recommendation: Recomme
         type: "spring",
         stiffness: 100
       }}
-      whileHover={{ 
-        y: -10,
-        transition: { duration: 0.2 }
-      }}
-      className="relative group h-full"
+      className="h-full"
     >
-      {/* Animated Border */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-yellow via-cyberpunk-cyan to-cyberpunk-yellow rounded-xl opacity-30 group-hover:opacity-70 blur-sm transition-all duration-500 animate-neonPulse" />
-      
-      {/* Card Content */}
-      <div className="relative bg-cyberpunk-darker/90 backdrop-blur-xl p-6 rounded-xl h-full border border-cyberpunk-cyan/20 transition-all duration-300 cyberpunk-scanline">
-        {/* Quote Icon */}
-        <div className="absolute top-4 right-4 text-cyberpunk-cyan/30 group-hover:text-cyberpunk-cyan/60 transition-colors duration-300">
-          <Quote className="w-6 h-6" />
-        </div>
-
-        {/* Header */}
-        <div className="flex items-center space-x-4 mb-4">
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            className="relative"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-yellow to-cyberpunk-cyan rounded-full opacity-60 blur-sm" />
-            <img
-              src={recommendation.avatar}
-              alt={recommendation.name}
-              className="relative w-16 h-16 rounded-full object-cover border-2 border-cyberpunk-cyan/20"
-            />
-          </motion.div>
-          <div className="flex-1">
-            <h3 className="text-cyberpunk-heading font-semibold text-lg cyberpunk-text-glow">{recommendation.name}</h3>
-            <p className="text-cyberpunk-cyan text-sm">{recommendation.role}</p>
-            <p className="text-cyberpunk-text text-sm">{recommendation.company}</p>
+      <CyberCard 
+        glowColor={index % 3 === 0 ? 'pink' : index % 3 === 1 ? 'blue' : 'green'}
+        hoverEffect={true}
+        className="h-full"
+      >
+        <div className="p-5 relative">
+          {/* Corner Quote Icon */}
+          <div className="absolute top-4 right-4 text-cyberpunk-blue/30 group-hover:text-cyberpunk-blue/60 transition-colors duration-300">
+            <Quote className="w-6 h-6" />
           </div>
+
+          {/* Header with Avatar */}
+          <div className="flex items-center space-x-4 mb-4">
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              className="relative"
+            >
+              <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-yellow to-cyberpunk-blue rounded-full opacity-60 blur-sm" />
+              <img
+                src={recommendation.avatar}
+                alt={recommendation.name}
+                className="relative w-16 h-16 rounded-full object-cover border-2 border-cyberpunk-blue/30"
+              />
+            </motion.div>
+            <div className="flex-1">
+              <h3 className="text-white font-mono font-semibold text-lg">{recommendation.name}</h3>
+              <p className="text-cyberpunk-blue text-sm">{recommendation.role}</p>
+              <p className="text-gray-400 text-sm">{recommendation.company}</p>
+            </div>
+          </div>
+
+          {/* Rating */}
+          <div className="mb-4">
+            <StarRating rating={recommendation.rating} />
+          </div>
+
+          {/* Testimonial Text */}
+          <div className="mb-4 bg-black/30 border border-cyberpunk-green/20 rounded p-3 min-h-[120px]">
+            <div className="text-xs text-cyberpunk-green mb-1 flex items-center">
+              <Terminal className="w-3 h-3 mr-1" />
+              <span>client_feedback.txt</span>
+            </div>
+            <blockquote className="text-gray-300 leading-relaxed italic">
+              "{recommendation.text}"
+            </blockquote>
+          </div>
+
+          {/* Project Badge */}
+          <CyberBadge 
+            label={recommendation.project}
+            color={index % 3 === 0 ? 'pink' : index % 3 === 1 ? 'blue' : 'green'}
+            icon={<MessageSquare className="w-3 h-3" />}
+          />
         </div>
-
-        {/* Rating */}
-        <div className="mb-4">
-          <StarRating rating={recommendation.rating} />
-        </div>
-
-        {/* Testimonial Text */}
-        <blockquote className="text-cyberpunk-text mb-4 italic leading-relaxed">
-          "{recommendation.text}"
-        </blockquote>
-
-        {/* Project Tag */}
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-cyberpunk-yellow/20 to-cyberpunk-cyan/20 rounded-full text-cyberpunk-yellow text-sm border border-cyberpunk-yellow/30"
-        >
-          <span className="w-2 h-2 bg-cyberpunk-cyan rounded-full mr-2 animate-pulse" />
-          {recommendation.project}
-        </motion.div>
-
-        {/* Hover Effect Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cyberpunk-cyan/5 to-cyberpunk-yellow/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </div>
+      </CyberCard>
     </motion.div>
   );
 };
@@ -181,7 +181,7 @@ const Recommendations = () => {
   });
 
   return (
-    <section id="recommendations" className="relative py-20 bg-cyberpunk-background overflow-hidden">
+    <section id="recommendations" className="relative py-20 bg-cyberpunk-purple overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* Section Title */}
         <motion.div
@@ -192,20 +192,48 @@ const Recommendations = () => {
           className="text-center mb-16"
         >
           <div className="relative inline-block">
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-yellow via-cyberpunk-cyan to-cyberpunk-yellow rounded-lg opacity-75 blur-sm animate-neonPulse" />
-            <h2 className="relative text-4xl font-bold text-cyberpunk-heading cyberpunk-text-glow bg-cyberpunk-darker px-6 py-3 rounded-lg">
-              Client Recommendations
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-pink via-cyberpunk-blue to-cyberpunk-green rounded-lg opacity-75 blur-sm animate-pulse" />
+            <h2 className="relative text-3xl font-bold text-white bg-cyberpunk-purple px-6 py-3 rounded-lg font-mono">
+              <span className="text-cyberpunk-pink">CLIENT</span>.<span className="text-cyberpunk-green">loadFeedback</span>(<span className="text-cyberpunk-blue">"all"</span>)
             </h2>
           </div>
           <motion.p
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-cyberpunk-text mt-4 text-lg max-w-2xl mx-auto"
+            className="text-gray-300 mt-4 text-lg max-w-2xl mx-auto"
           >
-            What clients and collaborators say about working with me
+            Feedback from clients and collaborators on project delivery and impact
           </motion.p>
         </motion.div>
+
+        {/* Terminal-like status banner */}
+        <CyberTerminal title="client_feedback.sys" className="mb-8">
+          <div className="text-sm space-y-2">
+            <div className="flex items-start space-x-2">
+              <span className="text-cyberpunk-green">$</span>
+              <div>
+                <span className="animate-pulse mr-1">_</span>
+                <span className="text-cyberpunk-blue">system</span>.<span className="text-cyberpunk-pink">analyzeClientData</span>()<span className="animate-pulse">;</span>
+              </div>
+            </div>
+            <p className="text-gray-400">Scanning project history and client satisfaction metrics...</p>
+            <div className="flex justify-between items-center mt-2 text-sm">
+              <div className="flex items-center">
+                <span className="text-cyberpunk-green mr-2">Projects Completed:</span> 
+                <span className="text-cyberpunk-blue">50+</span>
+              </div>
+              <div className="flex items-center">
+                <span className="text-cyberpunk-green mr-2">Client Satisfaction:</span> 
+                <span className="text-cyberpunk-pink">95%</span>
+              </div>
+              <div className="flex items-center">
+                <span className="text-cyberpunk-green mr-2">Returning Clients:</span> 
+                <span className="text-cyberpunk-yellow">87%</span>
+              </div>
+            </div>
+          </div>
+        </CyberTerminal>
 
         {/* Recommendations Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -226,25 +254,44 @@ const Recommendations = () => {
           className="mt-16 text-center"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { number: "30+", label: "Happy Clients" },
-              { number: "50+", label: "Projects Completed" },
-              { number: "95%", label: "Client Satisfaction" }
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 1 + index * 0.1, duration: 0.4 }}
-                className="relative group"
-              >
-                <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-yellow via-cyberpunk-cyan to-cyberpunk-yellow rounded-lg opacity-30 group-hover:opacity-60 blur-sm transition-opacity duration-300" />
-                <div className="relative bg-cyberpunk-darker/80 backdrop-blur-sm p-6 rounded-lg border border-cyberpunk-cyan/10 cyberpunk-box-glow">
-                  <div className="text-3xl font-bold text-cyberpunk-cyan mb-2 cyberpunk-cyan-glow">{stat.number}</div>
-                  <div className="text-cyberpunk-text">{stat.label}</div>
-                </div>
-              </motion.div>
-            ))}
+            <CyberCard
+              glowColor="pink"
+              className="py-8 px-4 text-center"
+            >
+              <div className="text-cyberpunk-pink mb-2 flex justify-center">
+                <Users size={20} />
+              </div>
+              <div className="text-3xl font-bold text-cyberpunk-pink mb-2 font-mono animate-neon">
+                30+
+              </div>
+              <div className="text-gray-300 font-mono">Happy Clients</div>
+            </CyberCard>
+            
+            <CyberCard
+              glowColor="blue"
+              className="py-8 px-4 text-center"
+            >
+              <div className="text-cyberpunk-blue mb-2 flex justify-center">
+                <Terminal size={20} />
+              </div>
+              <div className="text-3xl font-bold text-cyberpunk-blue mb-2 font-mono animate-neon">
+                50+
+              </div>
+              <div className="text-gray-300 font-mono">Projects Completed</div>
+            </CyberCard>
+            
+            <CyberCard
+              glowColor="green"
+              className="py-8 px-4 text-center"
+            >
+              <div className="text-cyberpunk-green mb-2 flex justify-center">
+                <ThumbsUp size={20} />
+              </div>
+              <div className="text-3xl font-bold text-cyberpunk-green mb-2 font-mono animate-neon">
+                95%
+              </div>
+              <div className="text-gray-300 font-mono">Client Satisfaction</div>
+            </CyberCard>
           </div>
         </motion.div>
       </div>
@@ -253,17 +300,24 @@ const Recommendations = () => {
       <div className="absolute inset-0 -z-10">
         {/* Grid Background */}
         <div 
-          className="absolute inset-0 opacity-10 cyberpunk-grid-bg" 
+          className="absolute inset-0 opacity-10" 
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(255, 42, 109, 0.1) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(255, 42, 109, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
         />
         
         {/* Floating Particles */}
-        {[...Array(40)].map((_, i) => (
+        {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className={`absolute w-1 h-1 ${i % 2 === 0 ? 'bg-cyberpunk-cyan' : 'bg-cyberpunk-yellow'}`}
+            className={`absolute w-1 h-1 ${i % 2 === 0 ? 'bg-cyberpunk-blue' : 'bg-cyberpunk-pink'}`}
             initial={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
               opacity: 0.4,
             }}
             animate={{
@@ -279,6 +333,21 @@ const Recommendations = () => {
             }}
           />
         ))}
+      </div>
+      
+      {/* Digital circuit decorations */}
+      <div className="absolute bottom-10 right-5 w-40 h-40 opacity-20 pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <path 
+            d="M10,10 L90,10 L90,90 L10,90 Z M30,10 L30,90 M50,10 L50,90 M70,10 L70,90 M10,30 L90,30 M10,50 L90,50 M10,70 L90,70" 
+            stroke="#FF2A6D" 
+            strokeWidth="1"
+            fill="none"
+          />
+          <circle cx="30" cy="30" r="3" fill="#FF2A6D" />
+          <circle cx="50" cy="50" r="3" fill="#FF2A6D" />
+          <circle cx="70" cy="70" r="3" fill="#FF2A6D" />
+        </svg>
       </div>
     </section>
   );

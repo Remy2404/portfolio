@@ -11,8 +11,10 @@ import {
   Rocket,
   Award,
   Target,
-  Zap
+  Zap,
+  Terminal
 } from 'lucide-react';
+import { CyberBadge } from './CyberpunkElements';
 
 interface TimelineEvent {
   id: number;
@@ -111,15 +113,30 @@ const timelineEvents: TimelineEvent[] = [
 const getTypeColor = (type: string) => {
   switch (type) {
     case 'education':
-      return 'from-blue-500 to-indigo-600';
+      return 'cyberpunk-blue';
     case 'work':
-      return 'from-green-500 to-emerald-600';
+      return 'cyberpunk-green';
     case 'project':
-      return 'from-purple-500 to-violet-600';
+      return 'cyberpunk-pink';
     case 'achievement':
-      return 'from-yellow-500 to-orange-600';
+      return 'cyberpunk-yellow';
     default:
-      return 'from-gray-500 to-gray-600';
+      return 'cyberpunk-blue';
+  }
+};
+
+const getTypeGlowColor = (type: string) => {
+  switch (type) {
+    case 'education':
+      return 'from-cyberpunk-blue to-cyberpunk-purple';
+    case 'work':
+      return 'from-cyberpunk-green to-cyberpunk-blue';
+    case 'project':
+      return 'from-cyberpunk-pink to-cyberpunk-purple';
+    case 'achievement':
+      return 'from-cyberpunk-yellow to-cyberpunk-pink';
+    default:
+      return 'from-cyberpunk-blue to-cyberpunk-purple';
   }
 };
 
@@ -144,142 +161,116 @@ const TimelineCard = ({ event, index, isLeft }: { event: TimelineEvent; index: n
     threshold: 0.2
   });
 
+  const eventColor = getTypeColor(event.type);
+  const eventGlow = getTypeGlowColor(event.type);
+
   return (
     <motion.div
       ref={ref}
       initial={{ 
-        opacity: 0, 
-        x: isLeft ? -100 : 100,
-        y: 50
+        opacity: 0,
+        x: isLeft ? -50 : 50,
+        y: 20
       }}
       animate={inView ? { 
-        opacity: 1, 
+        opacity: 1,
         x: 0,
         y: 0
       } : {}}
-      transition={{ 
-        duration: 0.6, 
-        delay: index * 0.2,
-        type: "spring",
-        stiffness: 100
-      }}
-      className={`relative flex ${isLeft ? 'flex-row-reverse' : 'flex-row'} items-center w-full mb-16 group`}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className={`relative mb-8 ${isLeft ? 'md:text-right' : ''}`}
     >
-      {/* Timeline Line Connection */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-[#FF0066] via-[#00FF8C] to-[#00FFFF] opacity-30 -z-10" />
-
-      {/* Content Card */}
-      <div className={`w-5/12 ${isLeft ? 'text-right pr-8' : 'text-left pl-8'}`}>
-        <motion.div
-          whileHover={{ 
-            scale: 1.02,
-            y: -5
+      {/* Timeline Card */}
+      <div className="relative">
+        {/* Glow Effect */}
+        <div 
+          className={`absolute -inset-1 bg-gradient-to-r ${eventGlow} rounded-xl opacity-60 blur-sm`}
+          style={{
+            animation: 'glow-pulse 2s ease-in-out infinite alternate'
           }}
-          className="relative"
-        >
-          {/* Animated Border */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-xl opacity-30 group-hover:opacity-60 blur-sm transition-all duration-500" />
+        ></div>
+        
+        <div className={`relative p-5 border-2 border-${eventColor} bg-cyberpunk-purple/90 backdrop-blur-md rounded-xl`}>
+          {/* Corner Brackets */}
+          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyberpunk-yellow opacity-70"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyberpunk-yellow opacity-70"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyberpunk-yellow opacity-70"></div>
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyberpunk-yellow opacity-70"></div>
           
-          {/* Card Content */}
-          <div className="relative bg-[#0A0A0A]/90 backdrop-blur-xl p-6 rounded-xl border border-white/10">
-            {/* Header */}
-            <div className={`flex items-center ${isLeft ? 'justify-end' : 'justify-start'} mb-4`}>
-              <div className={`flex items-center space-x-3 ${isLeft ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                <div className={`p-2 rounded-lg bg-gradient-to-r ${getTypeColor(event.type)} text-white`}>
-                  {event.icon}
-                </div>
-                <div className={`flex items-center space-x-2 ${isLeft ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  {getTypeIcon(event.type)}
-                  <span className="text-[#00FFFF] text-sm capitalize">{event.type}</span>
-                </div>
-              </div>
+          {/* Card content */}
+          <div className={`flex flex-col ${isLeft ? 'md:items-end' : ''}`}>
+            <div className="flex items-center mb-2 space-x-2">
+              <div className={`text-${eventColor} font-mono text-xl`}>{event.year}</div>
             </div>
-
-            {/* Title & Subtitle */}
-            <div className={`mb-4 ${isLeft ? 'text-right' : 'text-left'}`}>
-              <h3 className="text-xl font-bold text-white mb-1">{event.title}</h3>
-              <p className="text-[#00FF8C] font-medium">{event.subtitle}</p>
+            
+            <h3 className={`text-white font-bold text-lg mb-1 font-mono`}>{event.title}</h3>
+            <p className={`text-${eventColor} mb-3`}>{event.subtitle}</p>
+            
+            {/* Event type badge */}
+            <div className={`mb-3 ${isLeft ? 'md:self-end' : 'self-start'}`}>
+              <CyberBadge
+                label={event.type.toUpperCase()}
+                color={
+                  event.type === 'education' ? 'blue' : 
+                  event.type === 'work' ? 'green' :
+                  event.type === 'project' ? 'pink' : 'yellow'
+                }
+                icon={getTypeIcon(event.type)}
+              />
+            </div>
+            
+            {/* Terminal-like description */}
+            <div className="bg-black/50 border border-gray-700 rounded p-3 font-mono text-sm mb-3">
+              <div className="flex items-center space-x-2 mb-2 text-xs opacity-70">
+                <Terminal size={10} className={`text-${eventColor}`} />
+                <span className={`text-${eventColor}`}>{event.type}_log.txt</span>
+              </div>
+              <p className="text-gray-300">
+                {event.description}
+              </p>
               {event.location && (
-                <div className={`flex items-center mt-2 text-gray-400 text-sm ${isLeft ? 'justify-end' : 'justify-start'}`}>
-                  <MapPin className="w-4 h-4 mr-1" />
+                <div className="flex items-center mt-2 text-xs text-gray-400">
+                  <MapPin size={10} className="mr-1" />
                   <span>{event.location}</span>
                 </div>
               )}
             </div>
-
-            {/* Description */}
-            <p className="text-gray-300 mb-4 leading-relaxed">{event.description}</p>
-
+            
             {/* Technologies */}
             {event.technologies && (
-              <div className="mb-4">
-                <div className={`flex flex-wrap gap-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
-                  {event.technologies.map((tech, i) => (
-                    <motion.span
+              <div className="mb-3">
+                <div className="text-xs text-gray-400 mb-1 font-mono"># TECH STACK</div>
+                <div className="flex flex-wrap gap-2">
+                  {event.technologies.map(tech => (
+                    <span 
                       key={tech}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={inView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ delay: 0.3 + i * 0.05 }}
-                      className="px-2 py-1 bg-gradient-to-r from-[#FF0066]/20 to-[#00FF8C]/20 rounded-md text-[#00FFFF] text-xs border border-[#00FFFF]/30"
+                      className={`px-2 py-1 text-xs border border-${eventColor}/30 rounded bg-${eventColor}/10 text-${eventColor}`}
                     >
                       {tech}
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
               </div>
             )}
-
+            
             {/* Highlights */}
             {event.highlights && (
-              <div className="space-y-2">
-                {event.highlights.map((highlight, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: isLeft ? 20 : -20 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.4 + i * 0.1 }}
-                    className={`flex items-center text-sm text-gray-300 ${isLeft ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className={`w-2 h-2 bg-[#00FF8C] rounded-full ${isLeft ? 'ml-2' : 'mr-2'} animate-pulse`} />
-                    <span>{highlight}</span>
-                  </motion.div>
-                ))}
+              <div>
+                <div className="text-xs text-gray-400 mb-1 font-mono"># HIGHLIGHTS</div>
+                <div className="space-y-1">
+                  {event.highlights.map(highlight => (
+                    <div 
+                      key={highlight} 
+                      className="flex items-start"
+                    >
+                      <span className={`text-${eventColor} mr-2`}>›</span>
+                      <span className="text-gray-300 text-sm">{highlight}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
-        </motion.div>
-      </div>
-
-      {/* Central Timeline Node */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-        <motion.div
-          initial={{ scale: 0, rotate: 0 }}
-          animate={inView ? { scale: 1, rotate: 360 } : {}}
-          transition={{ 
-            duration: 0.5, 
-            delay: index * 0.2 + 0.3,
-            type: "spring",
-            stiffness: 200
-          }}
-          className="relative"
-        >
-          {/* Outer Ring */}
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] p-1 animate-pulse">
-            {/* Inner Node */}
-            <div className="w-full h-full rounded-full bg-[#0A0A0A] flex items-center justify-center border-2 border-white/20">
-              <div className="text-[#00FFFF] font-bold text-sm">{event.year}</div>
-            </div>
-          </div>
-          
-          {/* Pulsing Effect */}
-          <div className="absolute inset-0 rounded-full bg-[#00FFFF] opacity-20 animate-ping" />
-        </motion.div>
-      </div>
-
-      {/* Year Label for Mobile */}
-      <div className={`md:hidden absolute top-0 ${isLeft ? 'right-0' : 'left-0'} transform ${isLeft ? 'translate-x-full' : '-translate-x-full'} px-4`}>
-        <div className="bg-gradient-to-r from-[#FF0066] to-[#00FF8C] text-white px-3 py-1 rounded-full text-sm font-bold">
-          {event.year}
         </div>
       </div>
     </motion.div>
@@ -287,125 +278,111 @@ const TimelineCard = ({ event, index, isLeft }: { event: TimelineEvent; index: n
 };
 
 const Timeline = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
   return (
-    <section id="timeline" className="relative py-20 bg-[#0A0A0A] overflow-hidden">
+    <section id="timeline" className="relative py-20 bg-cyberpunk-purple">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Section Title */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
-          <div className="relative inline-block">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-lg opacity-75 blur-sm animate-pulse" />
-            <h2 className="relative text-4xl font-bold text-white bg-[#0A0A0A] px-6 py-3 rounded-lg">
-              My Journey
-            </h2>
-          </div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-gray-400 mt-4 text-lg max-w-2xl mx-auto"
-          >
-            Key milestones and achievements in my development career
-          </motion.p>
-        </motion.div>
+        <div className="relative inline-block mb-16">
+          <div className="absolute -inset-1 bg-gradient-to-r from-cyberpunk-pink via-cyberpunk-green to-cyberpunk-blue rounded-lg opacity-75 blur-sm animate-pulse" />
+          <h2 className="relative text-3xl font-bold text-white bg-cyberpunk-purple px-6 py-3 rounded-lg font-mono">
+            <span className="text-cyberpunk-yellow">CHRONO</span>.<span className="text-cyberpunk-green">view</span>(<span className="text-cyberpunk-pink">"memory_fragments"</span>)
+          </h2>
+        </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Main Timeline Line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-[#FF0066] via-[#00FF8C] to-[#00FFFF] opacity-50" />
-
-          {/* Timeline Events */}
-          <div className="space-y-0">
-            {timelineEvents.map((event, index) => (
-              <TimelineCard
-                key={event.id}
-                event={event}
-                index={index}
-                isLeft={index % 2 === 0}
-              />
-            ))}
+        {/* Intro Text */}
+        <div className="mx-auto max-w-3xl mb-16 bg-black/30 border border-cyberpunk-blue/30 p-6 rounded-lg font-mono">
+          <p className="text-cyberpunk-green mb-2">$ ./execute timeline_render.sh</p>
+          <p className="text-gray-300 mb-2">Accessing neural memory database...</p>
+          <div className="flex items-center space-x-2">
+            <span className="text-cyberpunk-blue">STATUS:</span>
+            <span className="bg-cyberpunk-blue/20 text-cyberpunk-blue font-mono px-2 py-0.5 text-xs rounded">
+              RENDERING TIMELINE DATA
+            </span>
+            <div className="w-2 h-2 rounded-full bg-cyberpunk-blue animate-ping"></div>
           </div>
         </div>
 
-        {/* Timeline Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1, duration: 0.6 }}
-          className="mt-20 text-center"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              { number: "4+", label: "Years Experience" },
-              { number: "50+", label: "Projects Built" },
-              { number: "20+", label: "Technologies Mastered" },
-              { number: "30+", label: "Satisfied Clients" }
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 1.2 + index * 0.1, duration: 0.4 }}
-                className="relative group"
-              >
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-lg opacity-30 group-hover:opacity-60 blur-sm transition-opacity duration-300" />
-                <div className="relative bg-[#0A0A0A]/80 backdrop-blur-sm p-6 rounded-lg border border-white/10">
-                  <div className="text-3xl font-bold text-[#00FFFF] mb-2">{stat.number}</div>
-                  <div className="text-gray-400">{stat.label}</div>
-                </div>
-              </motion.div>
-            ))}
+        {/* Timeline */}
+        <div className="relative">
+          {/* Central line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1">
+            <div className="h-full bg-gradient-to-b from-cyberpunk-pink via-cyberpunk-blue to-cyberpunk-green relative">
+              {/* Digital pulse effect on the timeline */}
+              <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-cyberpunk-pink to-transparent opacity-70"
+                style={{
+                  animation: 'pulse-soft 3s infinite',
+                  transform: 'translateY(0)',
+                }}
+              ></div>
+              
+              {/* Background grid on the center line */}
+              <div className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage: `linear-gradient(0deg, transparent 98%, rgba(0, 255, 65, 0.5) 100%)`,
+                  backgroundSize: '100% 10px',
+                }}
+              ></div>
+            </div>
           </div>
-        </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {timelineEvents.map((event, index) => {
+              // Determine if event should be on left or right side of timeline
+              const isLeft = index % 2 === 0;
+              
+              return (
+                <React.Fragment key={event.id}>
+                  {/* Add empty divs for proper alignment in the grid */}
+                  {isLeft ? (
+                    <>
+                      <TimelineCard event={event} index={index} isLeft={true} />
+                      <div className="hidden md:block"></div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="hidden md:block"></div>
+                      <TimelineCard event={event} index={index} isLeft={false} />
+                    </>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
+
+          {/* Timeline end marker */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 w-6 h-6 bg-cyberpunk-pink border-2 border-white rounded-full flex items-center justify-center">
+            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+          </div>
+        </div>
       </div>
 
-      {/* Background Effects */}
+      {/* Grid Background */}
       <div className="absolute inset-0 -z-10">
-        {/* Grid Background */}
         <div 
           className="absolute inset-0 opacity-10" 
           style={{
             backgroundImage: `
-              linear-gradient(to right, rgba(0, 255, 140, 0.1) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(0, 255, 140, 0.1) 1px, transparent 1px)
+              linear-gradient(to right, rgba(255, 42, 109, 0.1) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(255, 42, 109, 0.1) 1px, transparent 1px)
             `,
             backgroundSize: '40px 40px',
           }}
         />
-        
-        {/* Floating Particles */}
-        {[...Array(50)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-[#00FFFF]"
-            initial={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-              opacity: 0.4,
-            }}
-            animate={{
-              y: ['-30px', '30px'],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 2,
-              repeat: Infinity,
-              repeatType: 'reverse',
-              ease: 'easeInOut',
-              delay: Math.random() * 4,
-            }}
+      </div>
+
+      {/* Digital circuit decorations */}
+      <div className="absolute bottom-10 left-5 w-40 h-40 opacity-20 pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <path 
+            d="M0,40 L30,40 L30,10 L60,10 L60,40 L100,40 M60,40 L60,100" 
+            stroke="#FF2A6D" 
+            strokeWidth="1"
+            fill="none"
           />
-        ))}
+          <circle cx="30" cy="40" r="3" fill="#FF2A6D" />
+          <circle cx="60" cy="10" r="3" fill="#FF2A6D" />
+          <circle cx="60" cy="40" r="3" fill="#FF2A6D" />
+          <circle cx="60" cy="70" r="3" fill="#FF2A6D" />
+        </svg>
       </div>
     </section>
   );
