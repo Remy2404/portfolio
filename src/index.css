@@ -8,6 +8,43 @@
     color: theme('colors.cyberpunk.text');
     font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
     position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.cyberpunk.blue') rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Webkit scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #FF2A6D, #05D9E8);
+    border-radius: 4px;
+    border: 1px solid rgba(5, 217, 232, 0.3);
+    box-shadow: 0 0 5px rgba(5, 217, 232, 0.5);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #FF2A6D, #00FF41);
+    box-shadow: 0 0 10px rgba(5, 217, 232, 0.8);
+  }
+  
+  /* Hide scrollbar in specific situations but keep functionality */
+  .hide-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   
   body::before {
