@@ -8,7 +8,7 @@ import Ramy from '../../Img/Ramy.png';
 const Hero = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Fire effect animation
+  // Enhanced fire effect animation with better performance
   useEffect(() => {
     if (!canvasRef.current) return;
     
@@ -25,24 +25,27 @@ const Hero = () => {
       vx: number;
       vy: number;
       life: number;
+      size: number;
     }> = [];
 
     const createParticle = () => {
       return {
         x: Math.random() * canvas.width,
         y: canvas.height,
-        vx: (Math.random() - 0.5) * 2,
-        vy: -Math.random() * 3 - 1,
-        life: Math.random() * 0.5 + 0.5,
+        vx: (Math.random() - 0.5) * 3,
+        vy: -Math.random() * 4 - 1,
+        life: Math.random() * 0.8 + 0.4,
+        size: Math.random() * 3 + 2,
       };
     };
 
+    let animationFrame: number;
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.2)';
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Add new particles
-      if (particles.length < 100) {
+      if (particles.length < 120) {
         particles.push(createParticle());
       }
 
@@ -51,39 +54,46 @@ const Hero = () => {
         const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.life -= 0.01;
+        p.life -= 0.008;
+        p.vy *= 0.99; // Air resistance
 
         if (p.life <= 0) {
           particles.splice(i, 1);
           continue;
         }
 
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 5);
+        // Enhanced gradient with multiple colors
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
         gradient.addColorStop(0, `rgba(255, 215, 0, ${p.life})`);
-        gradient.addColorStop(1, `rgba(255, 77, 0, 0)`);
+        gradient.addColorStop(0.5, `rgba(255, 102, 0, ${p.life * 0.8})`);
+        gradient.addColorStop(1, `rgba(255, 0, 102, 0)`);
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      requestAnimationFrame(animate);
+      animationFrame = requestAnimationFrame(animate);
     };
 
     animate();
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1a1a2e]">
       {/* Grid Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div 
           className="absolute inset-0" 
           style={{
             backgroundImage: `
-              linear-gradient(to right, rgba(0, 255, 140, 0.1) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(0, 255, 140, 0.1) 1px, transparent 1px)
+              linear-gradient(to right, rgba(0, 247, 255, 0.1) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(254, 218, 0, 0.1) 1px, transparent 1px)
             `,
             backgroundSize: '40px 40px',
           }}
@@ -92,7 +102,7 @@ const Hero = () => {
         {[...Array(60)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-[#00FFFF]"
+            className={`absolute w-1 h-1 ${i % 2 === 0 ? 'bg-[#feda00]' : 'bg-[#00f7ff]'}`}
             initial={{
               x: Math.random() * window.innerWidth,
               y: Math.random() * window.innerHeight,
@@ -100,7 +110,7 @@ const Hero = () => {
             }}
             animate={{
               y: ['-20px', '20px'],
-              opacity: [0.2, 0.4, 0.2],
+              opacity: [0.2, 0.5, 0.2],
             }}
             transition={{
               duration: 2 + Math.random() * 2,
@@ -123,8 +133,8 @@ const Hero = () => {
         >
           <div className="relative group">
             {/* RGB Border Animation */}
-            <div className="absolute -inset-[3px] bg-gradient-to-r from-[#FF0066] via-[#00FF8C] to-[#00FFFF] rounded-xl opacity-75 group-hover:opacity-100 blur-[2px] animate-pulse transition-all duration-300" />
-            <div className="relative bg-[#0A0A0A] p-4 rounded-lg">
+            <div className="absolute -inset-[3px] bg-gradient-to-r from-[#feda00] to-[#00f7ff] rounded-xl opacity-75 group-hover:opacity-100 blur-[2px] animate-pulse transition-all duration-300" />
+            <div className="relative bg-[#1a1a2e] p-4 rounded-lg">
               <motion.img
                 src={Ramy}                alt="Phon Ramy"
                 className="w-full aspect-square object-cover rounded-lg"
